@@ -1,0 +1,10 @@
+---
+
+- hosts: app_servers
+  become: true
+  tasks: 
+
+    - name: Copy files
+      copy:
+        src: /home/admin/Desktop/prueba.txt
+        dest: /tmp/prueba.txt

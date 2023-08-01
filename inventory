@@ -1,2 +1,5 @@
+[app_servers]
 192.168.56.103
 managed2
+
+[hana_servers]
