@@ -1,0 +1,21 @@
+---
+
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: update repository index
+    community.general.zypper_repository:
+      repo: '*'
+      runrefresh: true
+
+  - name: install apache package
+    zypper:
+      name: apache2
+      state: latest 
+
+  - name: add yast2 packager
+    zypper:
+      name: yast2-packager
+      state: latest
