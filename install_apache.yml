@@ -5,17 +5,26 @@
   become: true
   tasks:
 
-  - name: update repository index
+  - name: OpenSUSE - update repository index 
     community.general.zypper_repository:
       repo: '*'
       runrefresh: true
+    when: ansible_distribution == "openSUSE Leap"
 
-  - name: install apache package
+  - name: OpenSUSE - install apache package
     zypper:
       name: apache2
-      state: latest 
-
-  - name: add yast2 packager
-    zypper:
-      name: yast2-packager
       state: latest
+    when: ansible_distribution == "openSUSE Leap"
+
+  - name: Ubuntu - update repository index
+    apt: 
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Ubuntu - install apache package
+    apt:
+      name: apache2
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
