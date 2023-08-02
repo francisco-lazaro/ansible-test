@@ -1,0 +1,13 @@
+---
+
+- hosts: app_servers
+  become: true
+  tasks:
+
+    - name: Send profile to application servers
+      copy:
+        src: /home/ansible/playbooks/managing_files/profile
+        dest: /home/admin/profile_{{SID}}
+        mode: 0777
+          #when: ansible_distribution == "Ubuntu"
+

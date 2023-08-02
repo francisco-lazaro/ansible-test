@@ -1,0 +1,28 @@
+---
+
+- hosts: app_servers
+  become: true
+  tasks: 
+
+  - name: Create SIDadm user
+    user:
+      name: '{{SID}}adm'
+      group: root 
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: Create oraSID user
+    user:
+      name: 'ora{{SID}}'
+      group: root
+
+- hosts: all 
+  become: true
+  tasks: 
+
+  - name: Create DAAadm user
+    user:
+      name: 'daaadm'
+      group: root

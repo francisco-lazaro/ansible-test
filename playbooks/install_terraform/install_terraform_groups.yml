@@ -1,0 +1,28 @@
+---
+###Declare groups in inventory file, in this case the tasks will be executre in app_servers group
+
+- hosts: app_servers
+  become: true
+  tasks: 
+   
+    # Using module 'package' to install a package instead of zypper o apt  
+  - name: Install Unzip
+    package: 
+      name: unzip
+
+##Declare groups [group_name] in inventory file, in this case the tasks will be executre in hana_servers group
+
+- hosts: hana_servers
+  become: true
+  tasks:
+
+    ### Unarchiving a zip file from an specific source in this case a zip file in the web
+  - name: Install terraform in application servers
+    tags: app,application
+    unarchive: 
+      src: https://releases.hashicorp.com/terraform/1.5.4/terraform_1.5.4_darwin_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0777
+      owner: root
+      group: root
