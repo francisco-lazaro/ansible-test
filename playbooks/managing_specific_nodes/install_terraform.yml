@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  become: true
+  tasks: 
+   
+    ### Using module 'package' to install a package instead of zypper o apt  
+  - name: install Unzip
+    package: 
+      name: unzip
+
+    ### Unarchiving a zip file from an specific source in this case a zip file in the web
+  - name: Install terraform
+    unarchive: 
+      src: https://releases.hashicorp.com/terraform/1.5.4/terraform_1.5.4_darwin_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root 
