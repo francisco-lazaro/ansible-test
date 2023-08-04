@@ -1,0 +1,31 @@
+---
+
+- hosts: app_servers
+  become: true
+  tasks:
+
+    - name: Send profile to application servers
+      copy:
+        src: /home/ansible/playbooks/managing_files/profile
+        dest: /home/admin/profile_{{SID}}
+        mode: 0777
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Enable SAP* user
+      lineinfile:
+        state: present
+        path: /home/admin/profile_{{SID}}
+        backrefs: yes
+        regexp: '^(.*?)sapstar(.*?)$'
+        line: login/no_automatic_user_sapstar = 2
+      register: sapstar
+        #when: ansible_distribution == "Ubuntu"
+        
+    - name: Update password expiration time
+      lineinfile:
+        path: /home/admin/profile_{{SID}}
+        state: present
+        backrefs: yes
+        regexp: '^(.*?)expiration_time(.*?)$'
+        line: login/password_expiration_time = 30
+      register: exp_time

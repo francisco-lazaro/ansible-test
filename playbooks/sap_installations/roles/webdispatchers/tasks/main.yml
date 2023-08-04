@@ -1,0 +1,78 @@
+##################################################################################
+### Copy Webdispatcher media & config files for installation #####################
+##################################################################################
+
+- name: Copy WebDispatcher media
+  copy:
+    src: /home/ansible/medias/installations/WebDispatcher/WEBDISP.SAR
+    dest: /usr/sap/scratch
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Copy sapinst config file
+  copy:
+    src: inifile.params
+    dest: /usr/sap/scratch/SWPM
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Copy master key file
+  copy:
+    src: instkey.pkey
+    dest: /usr/sap/scratch/SWPM
+    mode: 0777
+    owner: root
+    group: root
+
+##################################################################################
+### Adjust custom parameters for installation ####################################
+##################################################################################
+
+- name: Adjust WebDispatcher SID in config file
+  lineinfile:
+    path: /usr/sap/scratch/SWPM/inifile.params
+    backrefs: yes
+    regexp: '^(.*?)GetSidNoProfiles.sid(.*?)'
+    line: NW_GetSidNoProfiles.sid = {{SID}}
+
+- name: Adjust WebDispatcher Instance in config file
+  lineinfile:
+    path: /usr/sap/scratch/SWPM/inifile.params
+    backrefs: yes
+    regexp: '^(.*?)wdInstanceNumber(.*?)'
+    line: NW_Webdispatcher_Instance.wdInstanceNumber = {{INST}}
+
+- name: Adjust WebDispatcher HTTP port
+  lineinfile:
+    path: /usr/sap/scratch/SWPM/inifile.params
+    backrefs: yes
+    regexp: '^(.*?)wdHTTPPort(.*?)'
+    line: NW_webdispatcher_Instance.wdHTTPPort = 80{{INST}}
+
+- name: Adjust WebDispatcher HTTPS port
+  lineinfile:
+    path: /usr/sap/scratch/SWPM/inifile.params
+    backrefs: yes
+    regexp: '^(.*?)wdHTTPSPort(.*?)'
+    line: NW_webdispatcher_Instance.wdHTTPSPort = 443{{INST}}
+
+- name: Adjust WebDispatcher hostname
+  lineinfile:
+    path: /usr/sap/scratch/SWPM/inifile.params
+    backrefs: yes
+    regexp: '^(.*?)wdVirtualHostname(.*?)'
+    line: NW_webdispatcher_Instance.wdVirtualHostname = {{HOSTNAME}}
+
+##################################################################################
+### Unattended Webdispatcher installation ######################################## 
+##################################################################################
+     
+- name: Install SAP WebDispatcher
+  ansible.builtin.shell:
+    cmd: /usr/sap/scratch/SWPM/sapinst SAPINST_INPUT_PARAMETERS_URL=/usr/sap/scratch/SWPM/inifile.params SAPINST_EXECUTE_PRODUCT_ID='NW_Webdispatcher:NW750.IND.PD' SAPINST_SKIP_DIALOGS=true SAPINST_START_GUISERVER=false
+
+##################################################################################
+### END OF PLAYBOOK ##############################################################
+##################################################################################

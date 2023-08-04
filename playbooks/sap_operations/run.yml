@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tags: foundation
+  roles:
+    - foundation
+
+- hosts: webdispatchers
+  remote_user: root
+  tags: webdispatcher
+  roles:
+    - webdispatchers

@@ -1,0 +1,12 @@
+- name: Stop WebDispatcher
+  tags: stop
+  remote_user: '{{SID}}adm'
+  ansible.builtin.shell:
+    #cmd: touch '/home/{{SID}}adm/sidadmtest'
+    cmd: 'sapcontrol -nr {{INST}} -function Stop'
+
+- name: Start WebDispatcher
+  tags: start
+  remote_user: '{{SID}}adm'
+  ansible.builtin.shell:
+    cmd: 'sapcontrol -nr {{INST}} -function Start'

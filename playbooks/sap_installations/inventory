@@ -1,0 +1,3 @@
+[webdispatchers]
+managed1 SID=WWX INST=88 HOSTNAME=managed1
+managed2 SID=WWZ INST=89 HOSTNAME=managed2

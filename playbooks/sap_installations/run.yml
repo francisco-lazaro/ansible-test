@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  become: true
+  roles:
+    - foundation
+
+- hosts: webdispatchers
+  become: true
+  roles:
+    - webdispatchers

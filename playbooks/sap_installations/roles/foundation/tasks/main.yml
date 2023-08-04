@@ -1,0 +1,74 @@
+##################################################################################
+### Create SAP directories #######################################################
+##################################################################################
+
+- name: Create SAP main folder /usr/sap/
+  tags: mkdir,create,directory
+  file:
+    path: /usr/sap/
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+
+- name: Create media folder /usr/sap/scratch
+  tags: mkdir,create,directory
+  file: 
+    path: /usr/sap/scratch
+    state: directory
+
+- name: Create SWPM folder /usr/sap/scratch/SWPM
+  tags: mkdir,create,directory
+  file:
+    path: /usr/sap/scratch/SWPM
+    state: directory
+     
+##################################################################################
+### Copy media files #############################################################
+##################################################################################
+- name: Copy SWPM media
+  tags: copy,media,swpm
+  copy:
+    src: /home/ansible/medias/installations/SWPM/SWPM.SAR
+    dest: /usr/sap/scratch/SWPM
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Copy SAPCAR executable
+  tags: copy,media,sapcar
+  copy:
+    src: /home/ansible/medias/installations/Utilities/SAPCAR
+    dest: /usr/sap/scratch
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Copy SAPHostAgent
+  tags: copy,media,saphostagent
+  copy: 
+    src: /home/ansible/medias/installations/SWPM/SAPHOSTAGENT.SAR
+    dest: /usr/sap/scratch
+    mode: 0777
+    owner: root
+    group: root
+
+##################################################################################
+### Installing SWPM and CSH ######################################################
+##################################################################################
+      
+- name: Uncompress Software Provisioning Manager
+  tags: install,uncompress,swpm
+  ansible.builtin.shell:
+    cmd: /usr/sap/scratch/SAPCAR -xvf /usr/sap/scratch/SWPM/SWPM.SAR 
+
+- name: Install CSH 
+  tags: install,csh
+  zypper:
+    name: tcsh
+    state: latest
+
+##################################################################################
+### END of PLAYBOOK ##############################################################
+##################################################################################
